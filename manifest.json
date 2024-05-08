@@ -1,0 +1,27 @@
+{
+  "manifest_version": 3,
+  "name": "Ruper",
+  "version": "1.0.0",
+  "description": "Manage your tab groups easily.",
+  "background": {
+    "service_worker": "src/background-script.js",
+    "type": "module"
+  },
+  "content_scripts": [
+    {
+      "run_at": "document_end",
+      "js": [
+        "src/content-script.js"
+      ],
+      "matches": [
+        "https://*/*",
+        "http://*/*"
+      ],
+      "all_frames": false
+    }
+  ],
+  "permissions": [
+    "tabs",
+    "tabGroups"
+  ]
+}
