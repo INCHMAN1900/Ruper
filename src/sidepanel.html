@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Ruper</title>
+	<style>
+		body {
+			color-scheme: light;
+		}
+
+		.operation-btn {
+			margin-bottom: 8px;
+		}
+
+		.tabs-head {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			padding: 6px 10px;
+			margin: 0.8em 0 0.5em;
+			border-radius: 4px;
+			font-weight: normal;
+			font-size: 16px;
+		}
+
+		.tabs-head-grey {
+			background-color: #DADCE0;
+		}
+
+		.tabs-head-blue {
+			background-color: #8AB4F8;
+		}
+
+		.tabs-head-red {
+			background-color: #F28B82;
+		}
+
+		.tabs-head-yellow {
+			background-color: #FDD663;
+		}
+
+		.tabs-head-green {
+			background-color: #81C995;
+		}
+
+		.tabs-head-pink {
+			background-color: #FF8BCB;
+		}
+
+		.tabs-head-purple {
+			background-color: #C58AF9;
+		}
+
+		.tabs-head-cyan {
+			background-color: #78D9EC;
+		}
+
+		.tabs-head-orange {
+			background-color: #FCAD70;
+		}
+
+		.tabs-head-button {
+			padding: 4px;
+			width: 10px;
+			height: 10px;
+			opacity: 0.3;
+			cursor: pointer;
+			transition: all 0.2s;
+		}
+
+		.tabs-disconnect {
+			width: 16px;
+			height: 16px;
+		}
+
+		.tabs-head-button:hover {
+			opacity: 1;
+		}
+
+		.group-title {
+			flex: 1;
+			margin: 0;
+			font-size: 16px;
+			font-weight: normal;
+		}
+
+		.tabs-container {
+			padding-left: 2px;
+		}
+
+		.tab {
+			display: flex;
+			align-items: center;
+			justify-content: flex-start;
+		}
+
+		.tab input[type="checkbox"] {
+			margin-right: 8px;
+		}
+
+		.tab-title {
+			white-space: nowrap;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			-webkit-line-clamp: 1;
+		}
+
+		.group-dialog {
+			display: none;
+			position: fixed;
+			top: 50%;
+			left: 50%;
+			width: 200px;
+			transform: translate(-50%, -50%);
+			padding: 12px;
+			border-radius: 8px;
+			background-color: #DADCE0;
+		}
+
+		.group-dialog h3 {
+			margin-top: 0;
+		}
+
+		.group-selector-row {
+			display: flex;
+			align-items: center;
+			margin: 8px 0;
+		}
+
+		.group-selector-row input {
+			margin: 0;
+			margin-right: 4px;
+		}
+
+		.group-selector-operations {
+			display: flex;
+			justify-content: flex-end;
+		}
+
+		.group-selector-button {
+			width: 72px;
+			padding: 3px 0;
+			border: 1px solid grey;
+			border-radius: 6px;
+			font-size: 12px;
+			transform: scale(0.9);
+			text-align: center;
+			cursor: pointer;
+		}
+	</style>
+</head>
+
+<body>
+	<h1>Ruper Group Manager</h1>
+	<div>
+		<button class="operation-btn" id="removeAllGroups">Clear groups</button>
+		<button class="operation-btn" id="removeAllGroupsAndCloseTabs">Clear groups/Close tabs</button>
+	</div>
+	<div>
+		<button class="operation-btn" id="ungroupTabs">Ungroup tabs</button>
+		<button class="operation-btn" id="removeTabs">Remove tabs</button>
+		<button class="operation-btn" id="moveTabs">Move tabs</button>
+	</div>
+	<div class="root"></div>
+	<div class="group-dialog">
+		<h3>Move to</h3>
+		<div class="group-selector"></div>
+		<div class="group-selector-operations">
+			<div class="group-selector-button group-selector-cancel">Cancel</div>
+			<div class="group-selector-button group-selector-confirm">Confirm</div>
+		</div>
+	</div>
+
+	<script src="./sidepanel.js"></script>
+</body>
+
+</html>

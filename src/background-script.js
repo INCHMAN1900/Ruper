@@ -37,6 +37,8 @@ chrome.tabs.onUpdated.addListener(sendRefreshFormMessage);
 chrome.tabs.onMoved.addListener(sendRefreshFormMessage);
 chrome.tabs.onReplaced.addListener(sendRefreshFormMessage);
 
+chrome.sidePanel.setPanelBehavior({ openPanelOnActionClick: true }).catch((error) => console.error(error));
+
 async function sendRefreshFormMessage() {
   var tab = await getCurrentTab();
   if (tab && tab.id && tab.status === 'complete' && shouldIncludeTab(tab)) {

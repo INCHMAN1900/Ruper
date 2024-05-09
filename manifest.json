@@ -20,8 +20,24 @@
       "all_frames": false
     }
   ],
+  "side_panel": {
+    "default_path": "src/sidepanel.html"
+  },
+  "action": {
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "32": "icons/icon32.png",
+      "48": "icons/icon48.png",
+      "64": "icons/icon128.png",
+      "128": "icons/icon128.png",
+      "256": "icons/icon256.png",
+      "512": "icons/icon512.png"
+    },
+    "default_title": "Manage tab groups"
+  },
   "permissions": [
     "tabs",
-    "tabGroups"
+    "tabGroups",
+    "sidePanel"
   ]
 }

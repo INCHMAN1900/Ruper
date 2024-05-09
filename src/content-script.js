@@ -43,14 +43,14 @@ window.addEventListener('keydown', async (event) => {
   var activeElement = document.activeElement;
   if (event.ctrlKey) {
     if (event.key === 'g') showGroupOptions();
-    if (event.key === 'h') {
+    if (event.key === 'u') {
       // ctrl + h => delete one character
       if (activeElement.tagName === 'INPUT' && activeElement.type === 'text') return;
       if (activeElement.tagName === 'TEXTAREA') return;
       chrome.runtime.sendMessage({ type: 'Ungroup' });
     }
   }
-  if (isVisible()) {
+  if (isFormVisible()) {
     if (event.key === 'Escape') hideGroupOptions();
     if (event.key === 'Enter') createGroup(event);
   }
@@ -77,7 +77,7 @@ function hideGroupOptions() {
   container.style.display = 'none';
 }
 
-function isVisible() {
+function isFormVisible() {
   return container.style.display !== 'none';
 }
 
@@ -276,7 +276,7 @@ function initForm() {
 }
 
 async function refreshForm() {
-  if (!isVisible()) return;
+  if (!isFormVisible()) return;
 
   var tabs = await getTabs();
   if (tabs.length === 0) {
