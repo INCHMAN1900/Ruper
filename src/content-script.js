@@ -100,6 +100,7 @@ function initShadowRoot() {
   container.style.zIndex = 10000;
   container.style.fontSize = '14px';
   container.style.fontFamily = 'Arial, Helvetica, sans-serif';
+  container.style.webkitFontSmoothing = 'antialiased';
   document.body.appendChild(container);
 
   var shadowRoot = container.attachShadow({ mode: 'open' });

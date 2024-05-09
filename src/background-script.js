@@ -37,7 +37,11 @@ chrome.tabs.onReplaced.addListener(sendRefreshFormMessage);
 async function sendRefreshFormMessage() {
   var tab = await getCurrentTab();
   if (tab && tab.id && tab.status === 'complete' && shouldIncludeTab(tab)) {
-    chrome.tabs.sendMessage(tab.id, { type: 'RefreshForm' });
+    try {
+      await chrome.tabs.sendMessage(tab.id, { type: 'RefreshForm' });
+    } catch (error) {
+      console.log('Send message to tab error:', tab, tab.url, error);
+    }
   }
 }
 
