@@ -5,25 +5,32 @@ const Selectors = {
   root: Prefix + '-root',
   title: Prefix + '-title',
   button: Prefix + '-button',
+  checkbox: Prefix + '-checkbox',
+  tag: Prefix + '-tag',
+  tagActive: Prefix + '-tag-active',
 
   form: Prefix + '-form',
   formRow: Prefix + '-form-row',
   formLabel: Prefix + '-form-label',
   formRowTabs: Prefix + 'form-row-tabs',
-  formLabelTabs: Prefix + 'form-label-tabs',
+  formLabelTop: Prefix + 'form-label-tabs',
   formControl: Prefix + '-form-control',
   formOperations: Prefix + '-form-operations',
+  formInput: Prefix + '-form-input',
 
   tabsContainer: Prefix + '-rows',
   tabRow: Prefix + '-row',
   tabRowCheckbox: Prefix + '-row-checkbox',
   tabRowLabel: Prefix + '-row-label',
 
+  groupsContainer: Prefix + '-groups',
+  groupsTooltip: Prefix + '-tooltip',
+  groupItem: Prefix + '-group',
+  groupItemActive: Prefix + '-group-active',
+
   groupTitleId: Prefix + '-group-title',
   closeUncheckedId: Prefix + '-close-unchecked',
   collapseId: Prefix + '-collapsed',
-
-  checkbox: Prefix + '-checkbox',
 };
 
 const { container, shadowRoot } = initShadowRoot();
@@ -83,6 +90,18 @@ function createGroup(event) {
   if (event) event.preventDefault();
 }
 
+function removeGroupSelection(...excludes) {
+  var groupsContainer = $('.' + Selectors.groupsContainer);
+  var tags = [...groupsContainer.querySelectorAll('.' + Selectors.groupItem)];
+  tags.forEach((tag) => {
+    if (excludes.includes(tag)) return;
+    tag.classList.remove(Selectors.tagActive);
+    tag.classList.remove(Selectors.groupItemActive);
+  });
+  var tooltip = $('.' + Selectors.groupsTooltip);
+  tooltip.style.display = 'none';
+}
+
 function initShadowRoot() {
   var container = document.createElement('div');
   container.classList.add(Selectors.container);
@@ -132,8 +151,27 @@ function initShadowRoot() {
       .${Selectors.button}:not(:last-child) {
         margin-right: 10px;
       }
+      .${Selectors.tag} {
+        display: inline-block;
+        margin: 0 4px 0 0;
+        padding: 2px 8px;
+        border-radius: 4px;
+        background-color: rgba(0, 0, 0, 0.1);
+        font-size: 0.9em;
+        cursor: pointer;
+      }
+      .${Selectors.tagActive} {
+        background-color: #2A59D8;
+      }
       form {
         margin: 24px 0 12px;
+      }
+      .${Selectors.formInput} {
+        padding: 4px 8px;
+        border: 1px solid rgba(0, 0, 0, 0.15);
+        border-radius: 4px;
+        font-size: 0.95em;
+        appearence: none;
       }
       .${Selectors.formRow} {
         display: flex;
@@ -149,7 +187,7 @@ function initShadowRoot() {
         margin-right: 16px;
         text-align: right;
       }
-      .${Selectors.formLabelTabs} {
+      .${Selectors.formLabelTop} {
         align-self: flex-start;
         margin-top: 3px;
       }
@@ -159,6 +197,13 @@ function initShadowRoot() {
       .${Selectors.title} {
         margin-top: 0.2em;
         font-weight: normal;
+      }
+      .${Selectors.groupItem} {
+        margin-top: 8px;
+      }
+      .${Selectors.groupsTooltip} {
+        margin-top: 8px;
+        margin-bottom: -4px;
       }
       .${Selectors.tabRow} {
         display: flex;
@@ -182,13 +227,15 @@ function initShadowRoot() {
       <h2 class='${Selectors.title}'>Group Options</h2>
       <form class='${Selectors.form}'>
         <div class='${Selectors.formRow}'>
-          <label class='${Selectors.formLabel}'>Group Title</label>
+          <label class='${Selectors.formLabel} ${Selectors.formLabelTop}'>Group Title</label>
           <div class='${Selectors.formControl}'>
-            <input id='${Selectors.groupTitleId}' autofocus autocomplete="off" />
+            <input id='${Selectors.groupTitleId}' class='${Selectors.formInput}' autofocus autocomplete="off" />
+            <div class='${Selectors.groupsContainer}'></div>
+            <div class='${Selectors.groupsTooltip}'></div>
           </div>
         </div>
         <div class='${Selectors.formRow} ${Selectors.formRowTabs}'>
-          <label class='${Selectors.formLabel} ${Selectors.formLabelTabs}'>Tabs</label>
+          <label class='${Selectors.formLabel} ${Selectors.formLabelTop}'>Tabs</label>
           <div class='${Selectors.tabsContainer}'></div>
         </div>
         <div class='${Selectors.formRow}'>
@@ -218,6 +265,9 @@ function initForm() {
   var form = $('form');
   form.addEventListener('submit', createGroup);
 
+  var titleInput = $('#' + Selectors.groupTitleId);
+  titleInput.addEventListener('input', () => removeGroupSelection());
+
   var buttons = $$('.' + Selectors.formOperations + ' .' + Selectors.button);
   buttons[0].addEventListener('click', hideGroupOptions);
   buttons[1].addEventListener('click', createGroup);
@@ -232,17 +282,18 @@ async function refreshForm() {
   if (tabs.length === 0) {
     return hideGroupOptions();
   }
+  var groups = await getGroups();
 
   var titleInput = $('#' + Selectors.groupTitleId);
-  var group = await getCurrentGroup();
-  if (group) {
-    titleInput.value = group.title;
+  var currentGroup = await getCurrentGroup();
+  if (currentGroup) {
+    titleInput.value = currentGroup.title;
   } else {
     titleInput.value = 'New Group';
   }
 
   var tabsContainer = $('.' + Selectors.tabsContainer);
-  tabsContainer.querySelectorAll('.' + Selectors.tabRow).forEach((row) => row.remove());
+  tabsContainer.querySelectorAll('.' + Selectors.tabRow).forEach((el) => el.remove());
 
   tabs.forEach((tab) => {
     var row = document.createElement('div');
@@ -264,6 +315,47 @@ async function refreshForm() {
     label.htmlFor = id;
     row.append(label);
   });
+
+  var groupsContainer = $('.' + Selectors.groupsContainer);
+  groupsContainer.querySelectorAll('.' + Selectors.groupItem).forEach((el) => {
+    el.removeEventListener('click', onGroupToggle);
+    el.remove();
+  });
+  groups.forEach((group) => {
+    if (currentGroup && group.id === currentGroup.id) return;
+    var item = document.createElement('div');
+    item.innerText = group.title;
+    item.classList.add(Selectors.tag, Selectors.groupItem);
+    item.style.color = group.color;
+    item.groupId = group.id;
+    item.addEventListener('click', onGroupToggle);
+    groupsContainer.appendChild(item);
+  });
+  refreshGroupTooltip();
+}
+
+function onGroupToggle(event) {
+  var item = event.currentTarget;
+  item.classList.toggle(Selectors.tagActive);
+  item.classList.toggle(Selectors.groupItemActive);
+  removeGroupSelection(item);
+  refreshGroupTooltip();
+}
+
+async function refreshGroupTooltip() {
+  var currentGroup = await getCurrentGroup();
+  var tooltip = $('.' + Selectors.groupsTooltip);
+  var active = $('.' + Selectors.groupItemActive);
+  if (active) {
+    if (currentGroup) {
+      tooltip.innerText = 'Move selected tabs to ' + active.innerText;
+    } else {
+      tooltip.innerText = 'Add selected tabs to ' + active.innerText;
+    }
+    tooltip.style.display = 'block';
+  } else {
+    tooltip.style.display = 'none';
+  }
 }
 
 function collectGroupOptions() {
@@ -274,10 +366,15 @@ function collectGroupOptions() {
     .filter((x) => !!x);
   var closeUnchecked = $('#' + Selectors.closeUncheckedId).checked;
   var collapsed = $('#' + Selectors.collapseId).checked;
-  return { title, excludes, closeUnchecked, collapsed };
+  var groupId = null;
+  var selectedGroup = $('.' + Selectors.groupItemActive);
+  if (selectedGroup) {
+    groupId = selectedGroup.groupId;
+  }
+  return { title, excludes, closeUnchecked, collapsed, groupId };
 }
 
-async function getCurrentTab() {
+function getCurrentTab() {
   return promiseWithTimeout((resolve, reject, clearTimer) => {
     chrome.runtime.sendMessage({ type: 'GetCurrentTab' }, (response) => {
       clearTimer();
@@ -289,7 +386,7 @@ async function getCurrentTab() {
   });
 }
 
-async function getTabs() {
+function getTabs() {
   return promiseWithTimeout((resolve, reject, clearTimer) => {
     chrome.runtime.sendMessage({ type: 'GetTabs' }, (response) => {
       clearTimer();
@@ -301,7 +398,19 @@ async function getTabs() {
   });
 }
 
-async function getCurrentGroup() {
+function getGroups() {
+  return promiseWithTimeout((resolve, reject, clearTimer) => {
+    chrome.runtime.sendMessage({ type: 'GetGroups' }, (response) => {
+      clearTimer();
+      if (!response || !(response instanceof Array)) {
+        return reject(new Error('Failed to retrive groups'));
+      }
+      resolve(response);
+    });
+  });
+}
+
+function getCurrentGroup() {
   return promiseWithTimeout((resolve, _, clearTimer) => {
     chrome.runtime.sendMessage({ type: 'GetCurrentGroup' }, (response) => {
       resolve(response);

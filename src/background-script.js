@@ -13,6 +13,9 @@ chrome.runtime.onMessage.addListener((message, _, sendResponse) => {
     case 'GetTabs':
       getTabs().then((res) => sendResponse(res));
       break;
+    case 'GetGroups':
+      getGroups().then((res) => sendResponse(res));
+      break;
     case 'Group':
       group(message.options);
       break;
@@ -49,9 +52,10 @@ async function group(options = {}) {
   var tab = await getCurrentTab();
   if (!tab) return;
 
-  var groupId = tab.groupId || chrome.tabGroups.TAB_GROUP_ID_NONE;
+  var targetGroupId = options.groupId;
+  var currentGroupId = tab.groupId || chrome.tabGroups.TAB_GROUP_ID_NONE;
   var tabs = await chrome.tabs.query({
-    groupId,
+    groupId: currentGroupId,
     windowId: chrome.windows.WINDOW_ID_CURRENT,
   });
 
@@ -59,13 +63,15 @@ async function group(options = {}) {
   var tabIds = tabs.filter((tab) => shouldIncludeTab(tab) && excludes.indexOf(tab.id) === -1).map((tab) => tab.id);
 
   if (tabIds.length > 0) {
-    var updates = {};
-    if (groupId === chrome.tabGroups.TAB_GROUP_ID_NONE) {
-      updates = { createProperties: {}, tabIds };
+    var updates = { tabIds };
+    if (targetGroupId || currentGroupId !== chrome.tabGroups.TAB_GROUP_ID_NONE) {
+      updates.groupId = targetGroupId || currentGroupId;
     } else {
-      updates = { groupId, tabIds };
+      updates.createProperties = {};
     }
     chrome.tabs.group(updates, (groupId) => {
+      if (targetGroupId) return;
+
       var updates = {};
       if (typeof options.title === 'string') {
         updates.title = options.title.trim();
@@ -78,7 +84,10 @@ async function group(options = {}) {
       }
     });
   }
-  if (excludes.length > 0) chrome.tabs.ungroup(excludes);
+  // Just move if targetGroupId is present
+  if (!targetGroupId && excludes.length > 0) {
+    chrome.tabs.ungroup(excludes);
+  }
 
   if (options.closeUnchecked) {
     excludes.forEach((id) => chrome.tabs.remove(id));
@@ -126,6 +135,10 @@ async function getTabs() {
     windowType: 'normal',
   });
   return tabs.filter((tab) => shouldIncludeTab(tab));
+}
+
+async function getGroups() {
+  return await chrome.tabGroups.query({});
 }
 
 function shouldIncludeTab(tab) {
