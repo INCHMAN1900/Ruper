@@ -11,7 +11,18 @@
 		}
 
 		.operation-btn {
+			width: 30%;
 			margin-bottom: 8px;
+			padding: 2px 8px;
+			border: 1px solid lightgray;
+			border-radius: 4px;
+			font-size: 12px;
+			text-align: center;
+			cursor: pointer;
+		}
+
+		.operation-btn:hover {
+			border: 1px solid grey;
 		}
 
 		.tabs-head {
@@ -114,13 +125,14 @@
 			left: 50%;
 			width: 200px;
 			transform: translate(-50%, -50%);
-			padding: 12px;
+			padding: 12px 8px 8px 12px;
 			border-radius: 8px;
 			background-color: #DADCE0;
 		}
 
 		.group-dialog h3 {
 			margin-top: 0;
+			font-size: 1.5em;
 		}
 
 		.group-selector-row {
@@ -137,30 +149,35 @@
 		.group-selector-operations {
 			display: flex;
 			justify-content: flex-end;
+			margin-top: 24px;
 		}
 
 		.group-selector-button {
 			width: 72px;
 			padding: 3px 0;
-			border: 1px solid grey;
+			border: 1px solid rgba(0, 0, 0, 0.15);
 			border-radius: 6px;
 			font-size: 12px;
 			transform: scale(0.9);
 			text-align: center;
 			cursor: pointer;
 		}
+
+		.group-selector-button:hover {
+			border: 1px solid grey;
+		}
 	</style>
 </head>
 
 <body>
 	<h1>Ruper Group Manager</h1>
-	<div>
+	<div class="group-operation">
 		<button class="operation-btn" id="removeAllGroups">Clear groups</button>
-		<button class="operation-btn" id="removeAllGroupsAndCloseTabs">Clear groups/Close tabs</button>
+		<button class="operation-btn" id="removeAllGroupsAndCloseTabs">Close all tabs</button>
 	</div>
-	<div>
+	<div class="group-operation">
 		<button class="operation-btn" id="ungroupTabs">Ungroup tabs</button>
-		<button class="operation-btn" id="removeTabs">Remove tabs</button>
+		<button class="operation-btn" id="removeTabs">Close tabs</button>
 		<button class="operation-btn" id="moveTabs">Move tabs</button>
 	</div>
 	<div class="root"></div>

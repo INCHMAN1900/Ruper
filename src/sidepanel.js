@@ -14,6 +14,12 @@ document.querySelector('#ungroupTabs').addEventListener('click', ungroupTabs);
 document.querySelector('#removeTabs').addEventListener('click', removeTabs);
 document.querySelector('#moveTabs').addEventListener('click', showGroupSelector);
 
+window.addEventListener('keydown', (event) => {
+  if (event.key === 'Escape' && groupDialog.style.display !== 'none') {
+    hideGroupSelector();
+  }
+});
+
 var groupOperations = document.querySelectorAll('.group-selector-operations .group-selector-button');
 groupOperations[0].addEventListener('click', hideGroupSelector);
 groupOperations[1].addEventListener('click', moveTabs);
@@ -126,7 +132,7 @@ async function moveTabs() {
     }
     var groupId = getTargetGroup();
     if (!groupId) {
-      return alert('You need to select a group');
+      return;
     }
     await chrome.tabs.group({ groupId, tabIds });
     hideGroupSelector();

@@ -6,6 +6,6 @@
 
 Show group options and group tabs
 
-### `Ctrl + h`
+### `Ctrl + u`
 
 Dismiss current group
