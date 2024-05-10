@@ -10,6 +10,8 @@
 
 ## Usage
 
+> Make sure to refresh tabs after installation is complete.
+
 ### Create/Edit group
 
 Shortcut: `Ctrl + g`
