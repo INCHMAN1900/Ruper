@@ -63,6 +63,10 @@ Move the selected tabs to another group.
 - **disconnect**: cancel current group
 - **close**: cancel current group and close tabs in this group
 
+## Privacy
+
+Ruper does not collect, store or transfer any sensitive information about you.
+
 ## License
 
 The scripts and documentation in this project are released under the [MIT License](./LICENSE)
