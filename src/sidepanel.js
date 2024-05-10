@@ -49,10 +49,11 @@ async function initGroups() {
 }
 
 async function removeAllGroups(clear = false) {
+  var groups = await chrome.tabGroups.query({});
+  if (groups.length === 0) return;
   var tooltip =
     clear === true ? 'This will close all tabs.' : 'Do you want to ungroup all tabs?\nThis will not close any tab.';
   if (window.confirm(tooltip)) {
-    var groups = await chrome.tabGroups.query({});
     for (var group of groups) {
       await removeGroup(group.id, clear);
     }
