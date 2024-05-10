@@ -34,6 +34,20 @@ const Selectors = {
   groupTitleId: Prefix + '-group-title',
   closeUncheckedId: Prefix + '-close-unchecked',
   collapseId: Prefix + '-collapsed',
+
+  confirm: Prefix + '-button-confirm',
+};
+
+const colorMap = {
+  grey: '#DADCE0',
+  blue: '#8AB4F8',
+  red: '#F28B82',
+  yellow: '#FDD663',
+  green: '#81C995',
+  pink: '#FF8BCB',
+  purple: '#C58AF9',
+  cyan: '#78D9EC',
+  orange: '#FCAD70',
 };
 
 const { container, shadowRoot } = initShadowRoot();
@@ -159,12 +173,11 @@ function initShadowRoot() {
         margin: 0 4px 0 0;
         padding: 2px 8px;
         border-radius: 4px;
-        background-color: rgba(0, 0, 0, 0.1);
         font-size: 0.9em;
         cursor: pointer;
       }
       .${Selectors.tagActive} {
-        background-color: #2A59D8;
+        border: 1px solid #2A59D8;
       }
       form {
         margin: 24px 0 12px;
@@ -238,50 +251,16 @@ function initShadowRoot() {
         box-sizing: border-box;
         border-radius: 50%;
       }
-      .${Selectors.color}-grey input {
-        background-color: #DADCE0;
-        border-color: #DADCE0;
-      }
-  
-      .${Selectors.color}-blue input {
-        background-color: #8AB4F8;
-        border-color: #8AB4F8;
-      }
-  
-      .${Selectors.color}-red input {
-        background-color: #F28B82;
-        border-color: #F28B82;
-      }
-  
-      .${Selectors.color}-yellow input {
-        background-color: #FDD663;
-        border-color: #FDD663;
-      }
-  
-      .${Selectors.color}-green input {
-        background-color: #81C995;
-        border-color: #81C995;
-      }
-  
-      .${Selectors.color}-pink input {
-        background-color: #FF8BCB;
-        border-color: #FF8BCB;
-      }
-  
-      .${Selectors.color}-purple input {
-        background-color: #C58AF9;
-        border-color: #C58AF9;
-      }
-  
-      .${Selectors.color}-cyan input {
-        background-color: #78D9EC;
-        border-color: #78D9EC;
-      }
-  
-      .${Selectors.color}-orange input {
-        background-color: #FCAD70;
-        border-color: #FCAD70;
-      }
+      ${Object.keys(colorMap)
+        .map((key) => {
+          return `
+            .${Selectors.color}-${key} input {
+              background-color: ${colorMap[key]};
+              border-color: ${colorMap[key]};
+            }
+          `;
+        })
+        .join('\n')}
       .${Selectors.tabRow} {
         display: flex;
         align-items: center;
@@ -298,6 +277,11 @@ function initShadowRoot() {
       .${Selectors.tabsContainer} {
         max-height: 60vh;
         overflow: scroll;
+      }
+      .${Selectors.confirm} {
+        background-color: #0075FF;
+        color: white;
+        border: 1px solid #0075FF;
       }
     </style>
     <div class='${Selectors.root}'>
@@ -361,7 +345,7 @@ function initShadowRoot() {
         </div>
         <div class='${Selectors.formOperations}'>
           <div class='${Selectors.button}'>Cancel</div>
-          <div class='${Selectors.button}'>Confirm</div>
+          <div class='${Selectors.button} ${Selectors.confirm}'>Confirm</div>
         </div>
       </form>
     </div>
@@ -435,7 +419,7 @@ async function refreshForm() {
     var item = document.createElement('div');
     item.innerText = group.title;
     item.classList.add(Selectors.tag, Selectors.groupItem);
-    item.style.color = group.color;
+    item.style.backgroundColor = colorMap[group.color] || colorMap.grey;
     item.groupId = group.id;
     item.addEventListener('click', onGroupToggle);
     groupsContainer.appendChild(item);
