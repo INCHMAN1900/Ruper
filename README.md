@@ -12,21 +12,23 @@
 
 ### Create/Edit group
 
-**Shortcut: `Ctrl + g`**
+Shortcut: `Ctrl + g`
 
 This will bring the group options dialog to the front. Once you're done, hit `Enter` or confirm button to create a tab group or add selected tabs to an existing tab group.
 
 You can also transfer tabs in current group to another group.
 
+<img src="./screenshots/dialog.png" alt="group options dialog" />
+
 ### Cancel group
 
-**Shortcut: `Ctrl + u`**
+Shortcut: `Ctrl + u`
 
 Cancel current tab group.
 
 ### Ungroup current tab
 
-**Shortcut: `Ctrl + Shift + u`**
+Shortcut: `Ctrl + Shift + u`
 
 Remove current tab from the tab group.
 
