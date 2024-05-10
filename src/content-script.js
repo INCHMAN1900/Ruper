@@ -58,15 +58,10 @@ const $$ = (selector) => shadowRoot.querySelectorAll(selector);
 initForm();
 
 window.addEventListener('keydown', async (event) => {
-  var activeElement = document.activeElement;
   if (event.ctrlKey) {
     if (event.key === 'g') showGroupOptions();
-    if (event.key === 'u') {
-      // ctrl + h => delete one character
-      if (activeElement.tagName === 'INPUT' && activeElement.type === 'text') return;
-      if (activeElement.tagName === 'TEXTAREA') return;
-      chrome.runtime.sendMessage({ type: 'Ungroup' });
-    }
+    if (event.key === 'U') chrome.runtime.sendMessage({ type: 'UngroupCurrentTab' });
+    if (event.key === 'u') chrome.runtime.sendMessage({ type: 'Ungroup' });
   }
   if (isFormVisible()) {
     if (event.key === 'Escape') hideGroupOptions();

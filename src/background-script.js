@@ -22,6 +22,9 @@ chrome.runtime.onMessage.addListener((message, _, sendResponse) => {
     case 'Ungroup':
       ungroup();
       break;
+    case 'UngroupCurrentTab':
+      ungroupCurrentTab();
+      break;
   }
   return true;
 });
@@ -103,7 +106,13 @@ async function ungroup() {
   var tab = await getCurrentTab();
   if (!tab || tab.groupId === chrome.tabGroups.TAB_GROUP_ID_NONE) return;
   var tabs = await chrome.tabs.query({ groupId: tab.groupId });
-  await chrome.tabs.ungroup(tabs.map((tab) => tab.id));
+  chrome.tabs.ungroup(tabs.map((tab) => tab.id));
+}
+
+async function ungroupCurrentTab() {
+  var tab = await getCurrentTab();
+  if (!tab || tab.groupId === chrome.tabGroups.TAB_GROUP_ID_NONE) return;
+  chrome.tabs.ungroup([tab.id]);
 }
 
 async function getCurrentTab() {
