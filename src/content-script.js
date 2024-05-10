@@ -13,6 +13,7 @@ const Selectors = {
   formRow: Prefix + '-form-row',
   formLabel: Prefix + '-form-label',
   formRowTabs: Prefix + 'form-row-tabs',
+  formRowColors: Prefix + 'form-row-colors',
   formLabelTop: Prefix + 'form-label-tabs',
   formControl: Prefix + '-form-control',
   formOperations: Prefix + '-form-operations',
@@ -196,6 +197,9 @@ function initShadowRoot() {
       .${Selectors.formRowTabs} {
         margin: 14px 0 0px;
       }
+      .${Selectors.formRowColors} {
+        margin-top: 14px;
+      }
       .${Selectors.formLabel} {
         width: 120px;
         flex-shrink: 0;
@@ -295,7 +299,7 @@ function initShadowRoot() {
             <div class='${Selectors.groupsTooltip}'></div>
           </div>
         </div>
-        <div class='${Selectors.formRow}'>
+        <div class='${Selectors.formRow} ${Selectors.formRowColors}'>
           <label class='${Selectors.formLabel}'>Color</label>
           <div class='${Selectors.formControl} ${Selectors.colors}'>
             <div class='${Selectors.color} ${Selectors.color}-grey'>
