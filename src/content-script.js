@@ -18,6 +18,9 @@ const Selectors = {
   formOperations: Prefix + '-form-operations',
   formInput: Prefix + '-form-input',
 
+  colors: Prefix + '-colors',
+  color: Prefix + '-color',
+
   tabsContainer: Prefix + '-rows',
   tabRow: Prefix + '-row',
   tabRowCheckbox: Prefix + '-row-checkbox',
@@ -178,7 +181,7 @@ function initShadowRoot() {
         margin: 10px 0;
       }
       .${Selectors.formRowTabs} {
-        margin: 18px 0 0px;
+        margin: 14px 0 0px;
       }
       .${Selectors.formLabel} {
         width: 120px;
@@ -203,7 +206,81 @@ function initShadowRoot() {
       }
       .${Selectors.groupsTooltip} {
         margin-top: 8px;
-        margin-bottom: -4px;
+      }
+      .${Selectors.colors} {
+        display: flex;
+        align-items: center;
+      }
+      .${Selectors.color} {
+        display: inline-block;
+        margin-right: 12px;
+      }
+      .${Selectors.color} input {
+        appearence: none;
+        -webkit-appearance: none;
+        display: block;
+        position: relative;
+        width: 16px;
+        height: 16px;
+        margin: 0;
+        border: none;
+        border-radius: 50%;
+      }
+      .${Selectors.color} input:checked:before {
+        content: '';
+        position: absolute;
+        width: 68%;
+        height: 68%;
+        top: 16%;
+        left: 16%;
+        background-color: transparent;
+        border: 2px solid black;
+        box-sizing: border-box;
+        border-radius: 50%;
+      }
+      .${Selectors.color}-grey input {
+        background-color: #DADCE0;
+        border-color: #DADCE0;
+      }
+  
+      .${Selectors.color}-blue input {
+        background-color: #8AB4F8;
+        border-color: #8AB4F8;
+      }
+  
+      .${Selectors.color}-red input {
+        background-color: #F28B82;
+        border-color: #F28B82;
+      }
+  
+      .${Selectors.color}-yellow input {
+        background-color: #FDD663;
+        border-color: #FDD663;
+      }
+  
+      .${Selectors.color}-green input {
+        background-color: #81C995;
+        border-color: #81C995;
+      }
+  
+      .${Selectors.color}-pink input {
+        background-color: #FF8BCB;
+        border-color: #FF8BCB;
+      }
+  
+      .${Selectors.color}-purple input {
+        background-color: #C58AF9;
+        border-color: #C58AF9;
+      }
+  
+      .${Selectors.color}-cyan input {
+        background-color: #78D9EC;
+        border-color: #78D9EC;
+      }
+  
+      .${Selectors.color}-orange input {
+        background-color: #FCAD70;
+        border-color: #FCAD70;
       }
       .${Selectors.tabRow} {
         display: flex;
@@ -232,6 +309,38 @@ function initShadowRoot() {
             <input id='${Selectors.groupTitleId}' class='${Selectors.formInput}' autofocus autocomplete="off" />
             <div class='${Selectors.groupsContainer}'></div>
             <div class='${Selectors.groupsTooltip}'></div>
+          </div>
+        </div>
+        <div class='${Selectors.formRow}'>
+          <label class='${Selectors.formLabel}'>Color</label>
+          <div class='${Selectors.formControl} ${Selectors.colors}'>
+            <div class='${Selectors.color} ${Selectors.color}-grey'>
+              <input type='radio' id="grey" value="grey" name="group-color" checked />
+            </div>
+            <div class='${Selectors.color} ${Selectors.color}-blue'>
+              <input type='radio' id="blue" value="blue" name="group-color" />
+            </div>
+            <div class='${Selectors.color} ${Selectors.color}-red'>
+              <input type='radio' id="red" value="red" name="group-color" />
+            </div>
+            <div class='${Selectors.color} ${Selectors.color}-yellow'>
+              <input type='radio' id="yellow" value="yellow" name="group-color" />
+            </div>
+            <div class='${Selectors.color} ${Selectors.color}-green'>
+              <input type='radio' id="green" value="green" name="group-color" />
+            </div>
+            <div class='${Selectors.color} ${Selectors.color}-pink'>
+              <input type='radio' id="pink" value="pink" name="group-color" />
+            </div>
+            <div class='${Selectors.color} ${Selectors.color}-purple'>
+              <input type='radio' id="purple" value="purple" name="group-color" />
+            </div>
+            <div class='${Selectors.color} ${Selectors.color}-cyan'>
+              <input type='radio' id="cyan" value="cyan" name="group-color" />
+            </div>
+            <div class='${Selectors.color} ${Selectors.color}-orange'>
+              <input type='radio' id="orange" value="orange" name="group-color" />
+            </div>
           </div>
         </div>
         <div class='${Selectors.formRow} ${Selectors.formRowTabs}'>
@@ -371,7 +480,12 @@ function collectGroupOptions() {
   if (selectedGroup) {
     groupId = selectedGroup.groupId;
   }
-  return { title, excludes, closeUnchecked, collapsed, groupId };
+  var color = 'grey';
+  var radio = $(`.${Selectors.color} input:checked`);
+  if (radio) {
+    color = radio.value;
+  }
+  return { title, excludes, closeUnchecked, collapsed, groupId, color };
 }
 
 function getCurrentTab() {

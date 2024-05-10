@@ -81,6 +81,9 @@ async function group(options = {}) {
       if (typeof options.collapsed === 'boolean') {
         updates.collapsed = options.collapsed;
       }
+      if (options.color) {
+        updates.color = options.color;
+      }
       if (Object.keys(updates).length > 0) {
         chrome.tabGroups.update(groupId, updates);
       }
